@@ -1,0 +1,213 @@
+---
+swagger: "2.0"
+info:
+  description: An API for the hardware store
+  version: v1
+  title: Part API
+host: 127.0.0.1:8000
+basePath: /
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+security:
+- Basic: []
+paths:
+  /parts:
+    get:
+      tags:
+      - parts
+      description: Get all parts available
+      operationId: parts_list
+      parameters:
+      - name: type
+        in: query
+        description: Type of parts (CPU or GPU)
+        required: false
+        type: string
+      responses:
+        "200":
+          description: Part retrieved from the database
+          examples:
+            application/json:
+              status: 0
+              total: 188
+              average_price: 555.45
+              parts:
+              - id: abba998c-65f2-4b43-8b23-1d5da853161f
+                name: AMD Ryzen 9 7950X
+                type: CPU
+                price: 1088.95
+              - id: 4573ce70-b275-4179-bb23-a36644629376
+                name: PNY VERTO GeForce RTX 4070 Ti 12 GB Video Card
+                type: GPU
+                price: 1065.75
+        "400":
+          description: Invalid type provided
+          examples:
+            application/json:
+              status: 1
+              message: Invalid type. Valid choices are 'CPU' and 'GPU'.
+        "404":
+          description: No parts exist
+          examples:
+            application/json:
+              status: 1
+              message: No parts exist
+    put:
+      tags:
+      - parts
+      description: Add a part
+      operationId: parts_update
+      parameters:
+      - in: body
+        name: data
+        required: true
+        schema:
+          type: object
+          example:
+            name: Sapphire PULSE Radeon RX 7800 XT 16 GB Video Card
+            type: GPU
+            release_date: 1693958400
+            core_clock: 1295
+            clock_unit: MHz
+            price: 745.9
+            TDP: 266
+            part_no: 11330-02-20G
+      responses:
+        "200":
+          description: Part added to database
+          examples:
+            application/json:
+              status: 0
+              message: Part added
+              id: 1
+  /parts/{id}:
+    get:
+      tags:
+      - parts
+      description: Get a part using an ID
+      operationId: parts_read
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Part retrieved from the database
+          examples:
+            application/json:
+              status: 0
+              id: abba998c-65f2-4b43-8b23-1d5da853161f
+              name: AMD Ryzen 9 7950X
+              type: CPU
+              release_date: 1663372800
+              core_clock: 4.5
+              boost_clock: 5.7
+              clock_unit: GHz
+              price: 1088.95
+              TDP: 170
+              part_no: 100-100000514WOF
+        "404":
+          description: Part not found
+          examples:
+            application/json:
+              status: 1
+              message: Part does not exist with the ID
+    post:
+      tags:
+      - parts
+      description: Update a part using an ID
+      operationId: parts_create
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      - in: body
+        name: data
+        required: true
+        schema:
+          type: object
+          example:
+            name: Sapphire PULSE Radeon RX 7800 XT 16 GB Video Card
+            type: GPU
+            release_date: 1693958400
+            core_clock: 1295
+            clock_unit: MHz
+            price: 766.5
+            TDP: 266
+            part_no: 11330-02-20G
+      responses:
+        "200":
+          description: Part updated from the database
+          examples:
+            application/json:
+              status: 0
+              message: Part details updated
+        "404":
+          description: Part not found
+          examples:
+            application/json:
+              status: 1
+              message: Part with given id does not exist
+    delete:
+      tags:
+      - parts
+      description: Delete a part using an ID
+      operationId: parts_delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Part deleted from the database
+          examples:
+            application/json:
+              status: 0
+              message: Part deleted
+        "404":
+          description: Part not found
+          examples:
+            application/json:
+              status: 1
+              message: Part with given id does not exist
+    patch:
+      tags:
+      - parts
+      description: Partially update a part using an ID
+      operationId: parts_partial_update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      - in: body
+        name: data
+        required: true
+        schema:
+          type: object
+          example:
+            price: 766.5
+      responses:
+        "200":
+          description: Part partially updated from the database
+          examples:
+            application/json:
+              status: 0
+              message: Part modified
+        "404":
+          description: Part not found
+          examples:
+            application/json:
+              status: 1
+              message: Part with given id does not exist
+securityDefinitions:
+  Basic:
+    type: basic
+definitions: {}
